@@ -6,8 +6,8 @@ using namespace std;
 int main() {
 	setlocale(LC_ALL, "Russian");
 	//массивы классов
-	map <int, truba_type> pipes;
-	map <int, KS_type> KS_es;
+    unordered_map <int, truba_type> pipes;
+    unordered_map <int, KS_type> KS_es;
 	string temp_string;//врмененная строковая переменная (объявлена сверху т. к. используется повсеместно)
 	while (true) {
 		menu();

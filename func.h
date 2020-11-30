@@ -5,7 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <limits>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -13,16 +13,16 @@ class truba_type;
 class KS_type;
 
 void menu();
-void save_all(const map<int, truba_type>& pipes, const map<int, KS_type>& KS_es);
-void load_all(map<int, truba_type>& pipes, map<int, KS_type>& KS_es);
+void save_all(const unordered_map<int, truba_type>& pipes, const unordered_map<int, KS_type>& KS_es);
+void load_all(unordered_map<int, truba_type>& pipes, unordered_map<int, KS_type>& KS_es);
 void input_and_check(double& subject, const bool& int_check = 0);
 void input_and_check(std::string& subject, const std::string& name);
-vector<int> find_by_parameter(map<int, truba_type>& pipes, const bool& output = 1);
-vector<int> find_by_parameter(map<int,KS_type>& KS_es, const bool& output = 1);
-vector<int> pipes_in_service(map <int, truba_type> pipes, bool in_service);
-vector<int> ks_by_eff(map<int, KS_type> KS_es, double effectiveness);
+vector<int> find_by_parameter(unordered_map<int, truba_type>& pipes, const bool& output = 1);
+vector<int> find_by_parameter(unordered_map<int,KS_type>& KS_es, const bool& output = 1);
+vector<int> pipes_in_service(unordered_map <int, truba_type> pipes, bool in_service);
+vector<int> ks_by_eff(unordered_map<int, KS_type> KS_es, double effectiveness);
 
-template <typename T> void edit_by_id(map<int, T>& objects) {
+template <typename T> void edit_by_id(unordered_map<int, T>& objects) {
 
     cout << "Введите id Объекта, который хотите редактировать " << endl;
 	double id_selection;
@@ -37,7 +37,7 @@ template <typename T> void edit_by_id(map<int, T>& objects) {
 	}
 }
 
-template <typename T> void package_edit(vector<int>& found, map<int, T>& objects) {
+template <typename T> void package_edit(vector<int>& found, unordered_map<int, T>& objects) {
 
 	if (found.size() != 0) {
 		cout << "Хотите редактировать найденные Объекты? (y/n)" << endl;
@@ -61,7 +61,7 @@ template <typename T> void package_edit(vector<int>& found, map<int, T>& objects
 	}
 }
 
-template <typename T> vector<int> name_to_id(map<int,T> objects, std::string name)
+template <typename T> vector<int> name_to_id(unordered_map<int,T> objects, std::string name)
 {
 	vector<int> return_vector;
 
@@ -75,7 +75,7 @@ template <typename T> vector<int> name_to_id(map<int,T> objects, std::string nam
 
 }
 
-template <typename T> void vivod_vsego(map<int , T>& objects, std::string class_name)
+template <typename T> void vivod_vsego(unordered_map<int , T>& objects, std::string class_name)
 {
 	if (objects.size() > 0) {
 		for (auto i : objects) {
@@ -88,7 +88,7 @@ template <typename T> void vivod_vsego(map<int , T>& objects, std::string class_
 
 }
 
-template <typename T> vector<int> find_by_name(map<int,T>& objects, const bool& output = 1) {
+template <typename T> vector<int> find_by_name(unordered_map<int,T>& objects, const bool& output = 1) {
 	string name_selection;
 	input_and_check(name_selection, "название, по которому будет произведен поиск");
 
@@ -108,7 +108,7 @@ template <typename T> vector<int> find_by_name(map<int,T>& objects, const bool& 
 	return found;
 }
 
-template <typename T> vector<int> find_by_filter(map<int,T>& objects) {
+template <typename T> vector<int> find_by_filter(unordered_map<int,T>& objects) {
 
 	vector<int> found_1 = find_by_name(objects,0);
 	vector<int> found_2 = find_by_parameter(objects,0);
@@ -130,7 +130,7 @@ template <typename T> vector<int> find_by_filter(map<int,T>& objects) {
 	return found;
 }
 
-template <typename T> void switch_search(map<int,T>& objects) {
+template <typename T> void switch_search(unordered_map<int,T>& objects) {
 	
 	vector<int> found;
 	double selection;
@@ -167,7 +167,7 @@ template <typename T> void switch_search(map<int,T>& objects) {
 	}
 }
 
-template <typename T> void delete_object(map<int,T>& objects, string name) {
+template <typename T> void delete_object(unordered_map<int,T>& objects, string name) {
 	
 	if (objects.size() > 0) {
 		cout << endl << "Введите id Объекта, который хотите удалить " << endl;

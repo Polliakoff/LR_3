@@ -3,7 +3,7 @@
 
 using namespace std;
 
-vector<int> find_by_parameter(map<int,truba_type>& pipes, const bool& output) {
+vector<int> find_by_parameter(unordered_map<int,truba_type>& pipes, const bool& output) {
 	
     cout << "В ремонте ли труба? (y/n)" << endl;
 	vector<int> found;
@@ -43,7 +43,7 @@ vector<int> find_by_parameter(map<int,truba_type>& pipes, const bool& output) {
 	return found;
 }
 
-vector<int> find_by_parameter(map<int, KS_type>& KS_es, const bool& output) {
+vector<int> find_by_parameter(unordered_map<int, KS_type>& KS_es, const bool& output) {
 
 	cout << "Введите эффективность КС" << endl;
 	double effectiveness;
@@ -74,7 +74,7 @@ vector<int> find_by_parameter(map<int, KS_type>& KS_es, const bool& output) {
 	return found;
 }
 
-void save_all(const map<int,truba_type>& pipes, const map<int,KS_type>& KS_es) {
+void save_all(const unordered_map<int,truba_type>& pipes, const unordered_map<int,KS_type>& KS_es) {
 	
 	ofstream fout;
 	string filename;
@@ -101,7 +101,7 @@ void save_all(const map<int,truba_type>& pipes, const map<int,KS_type>& KS_es) {
 	fout.close();
 }
 
-void load_all(map<int,truba_type>& pipes, map<int, KS_type>& KS_es) {
+void load_all(unordered_map<int,truba_type>& pipes, unordered_map<int, KS_type>& KS_es) {
 	ifstream fin;//создание потока вывода из файла
 	string filename;
 	
@@ -177,7 +177,7 @@ void menu() {
 
 }
 
-vector<int> pipes_in_service(map <int,truba_type> pipes, bool in_service) {
+vector<int> pipes_in_service(unordered_map <int,truba_type> pipes, bool in_service) {
 
 	vector<int> return_vector;
 
@@ -191,7 +191,7 @@ vector<int> pipes_in_service(map <int,truba_type> pipes, bool in_service) {
 
 }
 
-vector<int> ks_by_eff(map<int, KS_type> KS_es, double effectiveness) {
+vector<int> ks_by_eff(unordered_map<int, KS_type> KS_es, double effectiveness) {
 
 	vector<int> return_vector;
 
