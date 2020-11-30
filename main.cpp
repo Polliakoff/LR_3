@@ -1,11 +1,12 @@
-#include "KS_type.h"
-#include "truba_type.h"
+#include "transport_net.h"
 
 using namespace std;
 
 int main() {
 	setlocale(LC_ALL, "Russian");
-	//массивы классов
+    //создание графа транспортной сети:
+    transport_net net;
+    //массивы классов
     unordered_map <int, truba_type> pipes;
     unordered_map <int, KS_type> KS_es;
 	string temp_string;//врмененная строковая переменная (объявлена сверху т. к. используется повсеместно)
@@ -67,6 +68,10 @@ int main() {
 			case 11: {
 				delete_object(pipes, "КС ");
 			}
+                break;
+            case 12: {
+               net.vvod(pipes,KS_es);
+            }
 				  break;
 			case 0: {
 				return 0;

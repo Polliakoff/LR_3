@@ -6,6 +6,8 @@
 #include <fstream>
 #include <limits>
 #include <unordered_map>
+#include <map>
+#include <algorithm>
 
 using namespace std;
 
@@ -17,6 +19,7 @@ void save_all(const unordered_map<int, truba_type>& pipes, const unordered_map<i
 void load_all(unordered_map<int, truba_type>& pipes, unordered_map<int, KS_type>& KS_es);
 void input_and_check(double& subject, const bool& int_check = 0);
 void input_and_check(std::string& subject, const std::string& name);
+void input_and_check(std::string& subject);
 vector<int> find_by_parameter(unordered_map<int, truba_type>& pipes, const bool& output = 1);
 vector<int> find_by_parameter(unordered_map<int,KS_type>& KS_es, const bool& output = 1);
 vector<int> pipes_in_service(unordered_map <int, truba_type> pipes, bool in_service);

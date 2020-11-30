@@ -7,9 +7,11 @@ SOURCES += \
         KS_type.cpp \
         func.cpp \
         main.cpp \
+        transport_net.cpp \
         truba_type.cpp
 
 HEADERS += \
     KS_type.h \
     func.h \
+    transport_net.h \
     truba_type.h

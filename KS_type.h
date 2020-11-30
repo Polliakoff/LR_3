@@ -9,7 +9,7 @@ private:
 public:
 
 	//параметры
-	std::string name;
+    std::string name;
 	int workshop_number;
 	int working_workshops;
 	double effectiveness=0;
