@@ -15,6 +15,7 @@ void transport_net::generate(map<int,KS_type> &KS_es, map<int,truba_type> &pipes
 
     strok_stolb.clear();
     m_smezhn.clear();
+    order.clear();
 
     if(KS_es.size()>0){
 
@@ -111,7 +112,7 @@ void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
 
 
 void transport_net::vivod(bool output)
-{
+{   
     if(m_smezhn.size()>0){
         if (output) cout<<"“ранспортна€ сеть на данный момент (-1 = нету свз€и, любое другое число = id соедин€ющей трубы)"<<endl;
         for(auto i : strok_stolb)
@@ -132,6 +133,17 @@ void transport_net::vivod(bool output)
     }
     else{
         cout<<"“ранспортна€ сеть не создана"<<endl;
+    }
+
+    if(order.size()>0){
+        cout<<"Ќомера вершин по топологической сортировке "<<endl;
+        for(auto i:order){
+            cout<<i.first<<"\t"<<i.second<<endl;
+        }
+
+    }
+    else{
+        cout<<"—еть не отсортирована "<<endl;
     }
 }
 
