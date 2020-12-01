@@ -18,7 +18,7 @@ public:
     transport_net();
     map< pair<int,int>, int> m_smezhn;
 
-    void generate(map<int,KS_type> &KS_es);
+    void generate(map<int,KS_type> &KS_es, map<int,truba_type> &pipes);
     void vivod(bool output = true);
     void edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es);
     void sort();

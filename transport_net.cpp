@@ -7,8 +7,12 @@ transport_net::transport_net()
 
 }
 
-void transport_net::generate(map<int,KS_type> &KS_es)
+void transport_net::generate(map<int,KS_type> &KS_es, map<int,truba_type> &pipes)
 {
+    for(auto &i:pipes){
+        i.second.connected = 0;
+    }
+
     strok_stolb.clear();
     m_smezhn.clear();
 
@@ -52,8 +56,6 @@ void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
 
                     cout<<"Id КС - конца: "<<endl;
                     id_presence(KS_es,id_end, false);
-
-
 
                     cout<<"Введите id трубы, соединяющей КС: "<<endl;
                     while(true){
@@ -139,6 +141,7 @@ void transport_net::sort()
 
         // 0 - белый 1 - серый 2 - черный
         //покрасим все вершины в белый
+        colour.clear();
         for(auto i : strok_stolb)
         {
             colour.emplace(i,0);
@@ -159,10 +162,11 @@ void transport_net::sort()
             if(accumulate(zahod.begin(), zahod.end(), 0) == int(zahod.size())*(-1)){
                 null_zahod.push(i);
             }
+            zahod.clear();
         }
 
-        if(zahod.size() == 0){
-            cout<<"В сети есть цикл, топологическая сортировка не возможна";
+        if(null_zahod.size() == 0){
+            cout<<"В сети есть цикл, топологическая сортировка не возможна"<<endl;
             return;
         }
         else{
@@ -174,6 +178,9 @@ void transport_net::sort()
             while(!temp_stack.empty())
                 temp_stack.pop();
 
+            order.clear();
+
+
             while(!null_zahod.empty()){
                 dfs(null_zahod.top(), temp_stack);
                 null_zahod.pop();
@@ -184,9 +191,11 @@ void transport_net::sort()
                 temp_stack.pop();
                 i++;
             }
-            cout<<"Отсортированные КС: "<<endl;
-            for(auto i:order){
-                cout<<i.first<<"\t"<<i.second;
+            if(order.size()>0){
+                cout<<"Отсортированные КС: "<<endl;
+                for(auto i:order){
+                    cout<<i.first<<"\t"<<i.second<<endl;
+                }
             }
 
         }
@@ -204,24 +213,30 @@ void transport_net::dfs(int vershina,stack<int> &temp_stack)
     if(predki.top()!=vershina)predki.push(vershina);
 
     for(auto sled_vershina: strok_stolb){
-        if(m_smezhn[make_pair(vershina,sled_vershina)]!=-1 && colour[sled_vershina]!=2){
-            there_is_way = true;
-            dfs(sled_vershina,temp_stack);
-            break;
-        }
-        else if(colour[sled_vershina]==1){
-            cout<<"В сети есть цикл, топологическая сортировка не возможна";
-            return;
+        if(m_smezhn[make_pair(vershina,sled_vershina)]!=-1){
+            if(colour[sled_vershina]==0){
+                there_is_way = true;
+                dfs(sled_vershina,temp_stack);
+                break;
+            }
+            else if(colour[sled_vershina]==1){
+                cout<<"В сети есть цикл, топологическая сортировка не возможна"<<endl;
+                while(!temp_stack.empty())
+                    temp_stack.pop();
+                return;
+            }
         }
     }
     if(there_is_way == false){
         predki.pop();
         if(predki.top()!=-1){
-            dfs(predki.top(),temp_stack);
             colour[vershina] = 2;
             temp_stack.push(vershina);
+            dfs(predki.top(),temp_stack);
         }
         else{
+            colour[vershina] = 2;
+            temp_stack.push(vershina);
             return;
         }
     }

@@ -62,15 +62,15 @@ int main() {
 			}
 				  break;
 			case 10:{
-				delete_object(pipes, "Труба ");
+                delete_object(pipes);
 			}
 				 break;
 			case 11: {
-				delete_object(pipes, "КС ");
+                delete_object(KS_es);
 			}
                 break;
             case 12: {
-               net.generate(KS_es);
+               net.generate(KS_es,pipes);
             }
 				  break;
             case 13: {

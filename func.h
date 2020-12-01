@@ -28,22 +28,26 @@ vector<int> ks_by_eff(map<int, KS_type> KS_es, double effectiveness);
 
 template <typename T> void id_presence(map<int, T>& objects,double &id_selection,  bool vivod = true) {
 
-    if(vivod) cout << "Введите id Объекта " << endl;
+    if(objects.size()>0){
+        if(vivod) cout << "Введите id Объекта " << endl;
 
-    while(true){
-        input_and_check(id_selection, 1);
+        while(true){
+            input_and_check(id_selection, 1);
 
-        if (!(objects.find(int(id_selection)) != objects.end())) {
-            cout << "Введите id одного из существующих объектов" << endl;
+            if (!(objects.find(int(id_selection)) != objects.end())) {
+                cout << "Введите id одного из существующих объектов" << endl;
+            }
+            else {
+                return;
+            }
         }
-        else {
-            return;
-        }
+    }
+    else{
+        cout << "Нет ни одного объекта" << endl;
     }
 }
 
 template <typename T> void edit_by_id(map<int, T>& objects) {
-
     double id_selection;
     id_presence(objects,id_selection);
     objects[int(id_selection)].edit();
@@ -179,28 +183,10 @@ template <typename T> void switch_search(map<int,T>& objects) {
     }
 }
 
-template <typename T> void delete_object(map<int,T>& objects, string name) {
-
-    if (objects.size() > 0) {
-        cout << endl << "Введите id Объекта, который хотите удалить " << endl;
-        double id_selection;
-
-        input_and_check(id_selection, 1);
-
-        if (objects.find(int(id_selection)) != objects.end()) {
-
-            objects.erase(int(id_selection));
-
-            cout << name << id_selection << " Успешно удалена " << endl;
-        }
-        else {
-            cout << "Неверный id (Верные можно посмотреть коммандо 3)" << endl;
-        }
-    }
-    else {
-        cout << "На данный момент нет ни одного объекта" << endl;
-    }
-
+template <typename T> void delete_object(map<int,T>& objects) {
+    double id_selection;
+    id_presence(objects,id_selection);
+    objects.erase(int(id_selection));
 }
 
 
