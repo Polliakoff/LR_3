@@ -9,13 +9,20 @@ class transport_net
 
 private:
     vector<int> strok_stolb;
+    map<int,int> order;
+    map<int,int> colour;
+    void dfs(int vershina,stack<int> &temp_stack);
+    stack<int> predki;
 
 public:
     transport_net();
     map< pair<int,int>, int> m_smezhn;
 
-    void vvod(const unordered_map<int,truba_type> &pipes, const unordered_map<int,KS_type> &KS_es);
-    void vivod();
+    void generate(map<int,KS_type> &KS_es);
+    void vivod(bool output = true);
+    void edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es);
+    void sort();
+
 };
 
 #endif // TRANSPORT_NET_H

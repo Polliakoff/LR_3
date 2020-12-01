@@ -7,8 +7,8 @@ int main() {
     //создание графа транспортной сети:
     transport_net net;
     //массивы классов
-    unordered_map <int, truba_type> pipes;
-    unordered_map <int, KS_type> KS_es;
+    map <int, truba_type> pipes;
+    map <int, KS_type> KS_es;
 	string temp_string;//врмененна€ строкова€ переменна€ (объ€влена сверху т. к. используетс€ повсеместно)
 	while (true) {
 		menu();
@@ -70,15 +70,27 @@ int main() {
 			}
                 break;
             case 12: {
-               net.vvod(pipes,KS_es);
+               net.generate(KS_es);
             }
 				  break;
+            case 13: {
+               net.edit(pipes,KS_es);
+            }
+                  break;
+            case 14: {
+                net.sort();
+            }
+                  break;
+            case 15: {
+               net.vivod();
+            }
+                  break;
 			case 0: {
 				return 0;
 			}
 				  break;
 			default: {
-				cout << "введите цифру от 0 до 11 дл€ выбора действи€" << endl;
+                cout << "введите цифру от 0 до 15 дл€ выбора действи€" << endl;
 			}
 				   break;
 			}

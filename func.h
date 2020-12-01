@@ -5,9 +5,10 @@
 #include <vector>
 #include <fstream>
 #include <limits>
-#include <unordered_map>
 #include <map>
 #include <algorithm>
+#include <stack>
+#include <numeric>
 
 using namespace std;
 
@@ -15,182 +16,190 @@ class truba_type;
 class KS_type;
 
 void menu();
-void save_all(const unordered_map<int, truba_type>& pipes, const unordered_map<int, KS_type>& KS_es);
-void load_all(unordered_map<int, truba_type>& pipes, unordered_map<int, KS_type>& KS_es);
+void save_all(const map<int, truba_type>& pipes, const map<int, KS_type>& KS_es);
+void load_all(map<int, truba_type>& pipes, map<int, KS_type>& KS_es);
 void input_and_check(double& subject, const bool& int_check = 0);
 void input_and_check(std::string& subject, const std::string& name);
 void input_and_check(std::string& subject);
-vector<int> find_by_parameter(unordered_map<int, truba_type>& pipes, const bool& output = 1);
-vector<int> find_by_parameter(unordered_map<int,KS_type>& KS_es, const bool& output = 1);
-vector<int> pipes_in_service(unordered_map <int, truba_type> pipes, bool in_service);
-vector<int> ks_by_eff(unordered_map<int, KS_type> KS_es, double effectiveness);
+vector<int> find_by_parameter(map<int, truba_type>& pipes, const bool& output = 1);
+vector<int> find_by_parameter(map<int,KS_type>& KS_es, const bool& output = 1);
+vector<int> pipes_in_service(map <int, truba_type> pipes, bool in_service);
+vector<int> ks_by_eff(map<int, KS_type> KS_es, double effectiveness);
 
-template <typename T> void edit_by_id(unordered_map<int, T>& objects) {
+template <typename T> void id_presence(map<int, T>& objects,double &id_selection,  bool vivod = true) {
 
-    cout << "Введите id Объекта, который хотите редактировать " << endl;
-	double id_selection;
+    if(vivod) cout << "Введите id Объекта " << endl;
 
-	input_and_check(id_selection, 1);
+    while(true){
+        input_and_check(id_selection, 1);
 
-	if (!(objects.find(int(id_selection)) != objects.end())) {
-		cout << "Введите id одного из существующих объектов" << endl;
-	}
-	else {
-		objects[id_selection].edit();
-	}
+        if (!(objects.find(int(id_selection)) != objects.end())) {
+            cout << "Введите id одного из существующих объектов" << endl;
+        }
+        else {
+            return;
+        }
+    }
 }
 
-template <typename T> void package_edit(vector<int>& found, unordered_map<int, T>& objects) {
+template <typename T> void edit_by_id(map<int, T>& objects) {
 
-	if (found.size() != 0) {
-		cout << "Хотите редактировать найденные Объекты? (y/n)" << endl;
-		while (true) {
-			string str_selection;
-			cin >> str_selection;
-			if (str_selection == "y") {
-				for (auto i : found) {
-					objects[i].edit();
-				}
-				break;
-			}
-			else if (str_selection == "n") {
-				found.clear();
-				return;
-			}
-			else {
-				cout << "Введите y или n" << endl;
-			}
-		}
-	}
+    double id_selection;
+    id_presence(objects,id_selection);
+    objects[int(id_selection)].edit();
 }
 
-template <typename T> vector<int> name_to_id(unordered_map<int,T> objects, std::string name)
+template <typename T> void package_edit(vector<int>& found, map<int, T>& objects) {
+
+    if (found.size() != 0) {
+        cout << "Хотите редактировать найденные Объекты? (y/n)" << endl;
+        while (true) {
+            string str_selection;
+            cin >> str_selection;
+            if (str_selection == "y") {
+                for (auto i : found) {
+                    objects[i].edit();
+                }
+                break;
+            }
+            else if (str_selection == "n") {
+                found.clear();
+                return;
+            }
+            else {
+                cout << "Введите y или n" << endl;
+            }
+        }
+    }
+}
+
+template <typename T> vector<int> name_to_id(map<int,T> objects, std::string name)
 {
-	vector<int> return_vector;
+    vector<int> return_vector;
 
-	for (auto i: objects) {
-		if (i.second.name == name) {
-			return_vector.push_back(i.first);
-		}
-	}
+    for (auto i: objects) {
+        if (i.second.name == name) {
+            return_vector.push_back(i.first);
+        }
+    }
 
-	return return_vector;
+    return return_vector;
 
 }
 
-template <typename T> void vivod_vsego(unordered_map<int , T>& objects, std::string class_name)
+template <typename T> void vivod_vsego(map<int , T>& objects, std::string class_name)
 {
-	if (objects.size() > 0) {
-		for (auto i : objects) {
-			cout<<i.second;
-		}
-	}
-	else {
-		cout << "Нет ни одного объекта категории " << class_name << endl;
-	}
+    if (objects.size() > 0) {
+        for (auto i : objects) {
+            cout<<i.second;
+        }
+    }
+    else {
+        cout << "Нет ни одного объекта категории " << class_name << endl;
+    }
 
 }
 
-template <typename T> vector<int> find_by_name(unordered_map<int,T>& objects, const bool& output = 1) {
-	string name_selection;
-	input_and_check(name_selection, "название, по которому будет произведен поиск");
+template <typename T> vector<int> find_by_name(map<int,T>& objects, const bool& output = 1) {
+    string name_selection;
+    input_and_check(name_selection, "название, по которому будет произведен поиск");
 
-	vector <int> found = name_to_id(objects, name_selection);
-	if (found.size() > 0) {
-		for (auto i : found) {
-			if (output) cout<<objects[i];
-		}
-	}
-	else {
-		if(output) cout << "Введите одно из названий cуществующих Труб (можно посмотреть командой 3)" << endl;
-	}
-	if (found.size() == 0) {
-		if (output) cout << "Не найден ни один объект по заданным параметрам" << endl;
-	}
+    vector <int> found = name_to_id(objects, name_selection);
+    if (found.size() > 0) {
+        for (auto i : found) {
+            if (output) cout<<objects[i];
+        }
+    }
+    else {
+        if(output) cout << "Введите одно из названий cуществующих Труб (можно посмотреть командой 3)" << endl;
+    }
+    if (found.size() == 0) {
+        if (output) cout << "Не найден ни один объект по заданным параметрам" << endl;
+    }
 
-	return found;
+    return found;
 }
 
-template <typename T> vector<int> find_by_filter(unordered_map<int,T>& objects) {
+template <typename T> vector<int> find_by_filter(map<int,T>& objects) {
 
-	vector<int> found_1 = find_by_name(objects,0);
-	vector<int> found_2 = find_by_parameter(objects,0);
-	vector<int> found;
+    vector<int> found_1 = find_by_name(objects,0);
+    vector<int> found_2 = find_by_parameter(objects,0);
+    vector<int> found;
 
-	for (auto i : found_1) {
-		for (auto j : found_2) {
-			if (i == j) {
-				found.push_back(i);
-				cout<<objects[i];
-			}
-		}
-	}
+    for (auto i : found_1) {
+        for (auto j : found_2) {
+            if (i == j) {
+                found.push_back(i);
+                cout<<objects[i];
+            }
+        }
+    }
 
-	if (found.size() == 0) {
-		cout << "Не найден ни один объект по заданным параметрам" << endl;
-	}
+    if (found.size() == 0) {
+        cout << "Не найден ни один объект по заданным параметрам" << endl;
+    }
 
-	return found;
+    return found;
 }
 
-template <typename T> void switch_search(unordered_map<int,T>& objects) {
-	
-	vector<int> found;
-	double selection;
+template <typename T> void switch_search(map<int,T>& objects) {
 
-	cout << "Выберите вариант фильтрации: " << endl <<
-		"1 - Вывод по признаку (ремонт/число раб. цехов)" << endl << "2 - Вывод по названию " << endl
-		<< "3 - Вывод по названию и признаку в ремонте" << endl;
+    vector<int> found;
+    double selection;
 
-	while (true) {
+    cout << "Выберите вариант фильтрации: " << endl <<
+            "1 - Вывод по признаку (ремонт/число раб. цехов)" << endl << "2 - Вывод по названию " << endl
+         << "3 - Вывод по названию и признаку в ремонте" << endl;
 
-		input_and_check(selection, 1);
+    while (true) {
 
-		switch (int(selection)) {
+        input_and_check(selection, 1);
 
-		case 1: {
-			found = find_by_parameter(objects);
-		}
-			  break;
-		case 2: {
-			found = find_by_name(objects);
-		}
-			  break;
-		case 3: {
-			found = find_by_filter(objects);
-		}
-			  break;
-		default: {
-			cout << "Введите 1 - 3" << endl;
-		}
-			   break;
-		}
-		package_edit(found, objects);
-		break;
-	}
+        switch (int(selection)) {
+
+        case 1: {
+            found = find_by_parameter(objects);
+        }
+            break;
+        case 2: {
+            found = find_by_name(objects);
+        }
+            break;
+        case 3: {
+            found = find_by_filter(objects);
+        }
+            break;
+        default: {
+            cout << "Введите 1 - 3" << endl;
+        }
+            break;
+        }
+        package_edit(found, objects);
+        break;
+    }
 }
 
-template <typename T> void delete_object(unordered_map<int,T>& objects, string name) {
-	
-	if (objects.size() > 0) {
-		cout << endl << "Введите id Объекта, который хотите удалить " << endl;
-		double id_selection;
+template <typename T> void delete_object(map<int,T>& objects, string name) {
 
-		input_and_check(id_selection, 1);
+    if (objects.size() > 0) {
+        cout << endl << "Введите id Объекта, который хотите удалить " << endl;
+        double id_selection;
 
-		if (objects.find(int(id_selection)) != objects.end()) {
+        input_and_check(id_selection, 1);
 
-			objects.erase(int(id_selection));
+        if (objects.find(int(id_selection)) != objects.end()) {
 
-			cout << name << id_selection << " Успешно удалена " << endl;
-		}
-		else {
-			cout << "Неверный id (Верные можно посмотреть коммандо 3)" << endl;
-		}
-	}
-	else {
-		cout << "На данный момент нет ни одного объекта" << endl;
-	}
+            objects.erase(int(id_selection));
+
+            cout << name << id_selection << " Успешно удалена " << endl;
+        }
+        else {
+            cout << "Неверный id (Верные можно посмотреть коммандо 3)" << endl;
+        }
+    }
+    else {
+        cout << "На данный момент нет ни одного объекта" << endl;
+    }
 
 }
 
