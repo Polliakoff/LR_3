@@ -11,7 +11,7 @@ private:
     vector<int> strok_stolb;
     map<int,int> order;
     map<int,int> colour;
-    void dfs(int vershina,stack<int> &temp_stack);
+    void dfs(int vershina,stack<int> &sort_stack);
     stack<int> predki;
 
 public:

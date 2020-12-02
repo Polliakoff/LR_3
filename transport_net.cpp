@@ -38,7 +38,6 @@ void transport_net::generate(map<int,KS_type> &KS_es, map<int,truba_type> &pipes
 
 void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
 {
-
     string selection, selection_1;
     bool are_there_any = false;
     double id_begin = -1, id_end = -1, pipe_id = -1;
@@ -46,6 +45,7 @@ void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
         while(true){
 
             vivod();
+
             while(true){
                 cout<<"’отите ли вы редактировать транспортную сеть (y/n)?"<<endl;
                 cin>>selection;
@@ -64,14 +64,13 @@ void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
                         cin>>selection_1;
                         if(selection_1 == "1")
                         {
-                            cout<<"¬ведите id трубы, соедин€ющей : "<<endl;
+                            cout<<"¬ведите id трубы, соедин€ющей  — : "<<endl;
                             while(true){
                                 cout<<"ƒоступные трубы: "<<endl;
                                 for(auto i:pipes){
                                     if(i.second.connected == 0){
                                         cout<<i.second;
                                         are_there_any = true;
-
                                     }
                                 }
                                 if(are_there_any == false){
@@ -122,20 +121,18 @@ void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
                     cout<<"¬ведите y или n строчными буквами"<<endl;
                 }
             }
-
         }
     }
     else{
         cout<<"“ранспортна€ сеть не создана"<<endl;
     }
-
 }
-
 
 void transport_net::vivod(bool output)
 {   
     if(m_smezhn.size()>0){
-        if (output) cout<<"“ранспортна€ сеть на данный момент (-1 = нету свз€и, любое другое число = id соедин€ющей трубы)"<<endl;
+        if (output) cout<<"“ранспортна€ сеть на данный момент (-1 = нету свз€и, любое другое число = id соедин€ющей трубы)"
+                       <<endl;
         for(auto i : strok_stolb)
         {
             cout<<"\t"<<i;
@@ -161,7 +158,6 @@ void transport_net::vivod(bool output)
         for(auto i:order){
             cout<<i.first<<"\t"<<i.second<<endl;
         }
-
     }
     else{
         cout<<"—еть не отсортирована "<<endl;
@@ -182,9 +178,8 @@ void transport_net::sort()
 
         //Ќайдем корень, отсутствие корн€ приводит к циклу
         vector<int> zahod;
-        vector<int> ishod;
         stack<double> null_zahod;
-        stack<int> temp_stack;
+        stack<int> sort_stack;
         for(auto i : strok_stolb)
         {
             for(auto j : strok_stolb)
@@ -208,20 +203,19 @@ void transport_net::sort()
 
             predki.push(-1);
 
-            while(!temp_stack.empty())
-                temp_stack.pop();
+            while(!sort_stack.empty())
+                sort_stack.pop();
 
             order.clear();
 
-
             while(!null_zahod.empty()){
-                dfs(null_zahod.top(), temp_stack);
+                dfs(null_zahod.top(), sort_stack);
                 null_zahod.pop();
             }
             int i = 1;
-            while(!temp_stack.empty()){
-                order.emplace(i, temp_stack.top());
-                temp_stack.pop();
+            while(!sort_stack.empty()){
+                order.emplace(i, sort_stack.top());
+                sort_stack.pop();
                 i++;
             }
             if(order.size()>0){
@@ -230,16 +224,14 @@ void transport_net::sort()
                     cout<<i.first<<"\t"<<i.second<<endl;
                 }
             }
-
         }
-
     }
     else{
         cout<<"“ранспортна€ сеть не создана"<<endl;
     }
 }
 
-void transport_net::dfs(int vershina,stack<int> &temp_stack)
+void transport_net::dfs(int vershina,stack<int> &sort_stack)
 {
     bool there_is_way = false;
     if(colour[vershina] == 0) colour[vershina] = 1;
@@ -249,13 +241,13 @@ void transport_net::dfs(int vershina,stack<int> &temp_stack)
         if(m_smezhn[make_pair(vershina,sled_vershina)]!=-1){
             if(colour[sled_vershina]==0){
                 there_is_way = true;
-                dfs(sled_vershina,temp_stack);
-                break;
+                dfs(sled_vershina,sort_stack);
+                return;
             }
             else if(colour[sled_vershina]==1){
                 cout<<"¬ сети есть цикл, топологическа€ сортировка не возможна"<<endl;
-                while(!temp_stack.empty())
-                    temp_stack.pop();
+                while(!sort_stack.empty())
+                    sort_stack.pop();
                 return;
             }
         }
@@ -264,12 +256,12 @@ void transport_net::dfs(int vershina,stack<int> &temp_stack)
         predki.pop();
         if(predki.top()!=-1){
             colour[vershina] = 2;
-            temp_stack.push(vershina);
-            dfs(predki.top(),temp_stack);
+            sort_stack.push(vershina);
+            dfs(predki.top(),sort_stack);
         }
         else{
             colour[vershina] = 2;
-            temp_stack.push(vershina);
+            sort_stack.push(vershina);
             return;
         }
     }
