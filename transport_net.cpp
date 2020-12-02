@@ -39,7 +39,7 @@ void transport_net::generate(map<int,KS_type> &KS_es, map<int,truba_type> &pipes
 void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
 {
 
-    string selection;
+    string selection, selection_1;
     bool are_there_any = false;
     double id_begin = -1, id_end = -1, pipe_id = -1;
     if(m_smezhn.size()>0){
@@ -50,7 +50,7 @@ void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
                 cout<<"Хотите ли вы редактировать транспортную сеть (y/n)?"<<endl;
                 cin>>selection;
                 if(selection == "y"){
-                    cout<<"Введите два id КС, а затем id трубы которой хотите их соеденить: "<<endl;
+                    cout<<"Введите два id КС: "<<endl;
 
                     cout<<"Id КС - начала: "<<endl;
                     id_presence(KS_es,id_begin, false);
@@ -58,41 +58,62 @@ void transport_net::edit(map<int,truba_type> &pipes, map<int,KS_type> &KS_es)
                     cout<<"Id КС - конца: "<<endl;
                     id_presence(KS_es,id_end, false);
 
-                    cout<<"Введите id трубы, соединяющей КС: "<<endl;
+                    cout<<"Вы хотите соединить КС трубой или разорвать связь между ними ?"<<
+                          endl<<"1 - соединить 2- разорвать"<<endl;
                     while(true){
-                        cout<<"Доступные трубы: "<<endl;
-                        for(auto i:pipes){
-                            if(i.second.connected == 0){
-                                cout<<i.second;
-                                are_there_any = true;
+                        cin>>selection_1;
+                        if(selection_1 == "1")
+                        {
+                            cout<<"Введите id трубы, соединяющей : "<<endl;
+                            while(true){
+                                cout<<"Доступные трубы: "<<endl;
+                                for(auto i:pipes){
+                                    if(i.second.connected == 0){
+                                        cout<<i.second;
+                                        are_there_any = true;
 
+                                    }
+                                }
+                                if(are_there_any == false){
+                                    cout<<"Нет доступных труб, добавление связи невозможно "<<endl;
+                                    return;
+                                }
+                                cout<<endl;
+                                id_presence(pipes, pipe_id, false);
+                                if(pipes[int(pipe_id)].connected == 0){
+                                    pipes[int(pipe_id)].connected=1;
+                                    break;
+                                }
+                                else{
+                                    cout<<"Вы ввели Id уже присоединенной трубы";
+                                }
+                                are_there_any = false;
                             }
+
+                            if( m_smezhn[make_pair(id_begin, id_end)] == -1){
+                                m_smezhn[make_pair(id_begin, id_end)] = pipe_id;
+                            }
+                            else {
+                                pipes[m_smezhn[make_pair(id_begin, id_end)]].connected = 0;
+                                m_smezhn[make_pair(id_begin, id_end)] = pipe_id;
+                            }
+                            break;
                         }
-                        if(are_there_any == false){
-                            cout<<"Нет доступных труб, редактирование невозможно "<<endl;
-                            return;
-                        }
-                        cout<<endl;
-                        id_presence(pipes, pipe_id, false);
-                        if(pipes[int(pipe_id)].connected == 0){
-                            pipes[int(pipe_id)].connected=1;
+                        else if(selection_1 == "2"){
+                            if( m_smezhn[make_pair(id_begin, id_end)] == -1){
+                                cout<<"Данные КС уже не связаны"<<endl;
+                            }
+                            else {
+                                pipes[m_smezhn[make_pair(id_begin, id_end)]].connected = 0;
+                                m_smezhn[make_pair(id_begin, id_end)] = -1;
+                            }
                             break;
                         }
                         else{
-                            cout<<"Вы ввели Id уже присоединенной трубы";
+                            cout<<"Введите 1 или 2";
                         }
-                        are_there_any = false;
-                    }
-
-                    if( m_smezhn[make_pair(id_begin, id_end)] == -1){
-                        m_smezhn[make_pair(id_begin, id_end)] = pipe_id;
-                    }
-                    else {
-                        pipes[m_smezhn[make_pair(id_begin, id_end)]].connected = 0;
-                        m_smezhn[make_pair(id_begin, id_end)] = pipe_id;
                     }
                     break;
-
                 }
                 else if(selection == "n"){
                     return;
@@ -252,7 +273,6 @@ void transport_net::dfs(int vershina,stack<int> &temp_stack)
             return;
         }
     }
-
 }
 
 
