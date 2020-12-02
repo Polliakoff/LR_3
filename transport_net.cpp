@@ -178,7 +178,7 @@ void transport_net::sort()
 
         //Ќайдем корень, отсутствие корн€ приводит к циклу
         vector<int> zahod;
-        stack<double> null_zahod;
+        stack<int> null_zahod;
         stack<int> sort_stack;
         for(auto i : strok_stolb)
         {
